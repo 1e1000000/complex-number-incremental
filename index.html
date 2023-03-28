@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title id="title">Number Incremental Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sintony&display=swap" rel="stylesheet">
+
+    <link href="style.css" rel="stylesheet" type="text/css"/>
+
+    <script src="break_eternity.js"></script>
+    <script src="js/Element.js"></script>
+    <script src="js/save.js"></script>
+
+    <script src="js/prestige.js"></script>
+
+    <script src="js/tabs.js"></script>
+    <script src="js/calc.js"></script>
+    <script src="js/elements.js"></script>
+    <script src="js/math.js"></script>
+    <script src="js/upgrades.js"></script>
+    <script src="js/temp.js"></script>
+    <script src="js/format.js"></script>
+
+    <script src="js/main.js"></script>
+</head>
+
+<body onload="loadGame()"> 
+  <div style="height: 130px">
+    <text id="offlineTime" style="font-size: 16px"></text><br>
+    <div style="width:100%;min-width: 300px"><text style="font-size: 16px">Your Number is currently <b id="number" style="font-size: 28px">0</b></text>
+      <br><text style="font-size: 16px"><b id="production">(+0/s)</b></text>
+    </div>
+  </div>
+  <div id="tabs" class="table_center" style="height: 30px"></div>
+  <div style="width: 100%; border-bottom: solid 2px white; height: 5px; margin-bottom: 13px;"></div>
+  <div id="stabs" style="min-height: 30px;"></div><br>
+
+  <div id="tab_frame0">
+    <div id="stab_frame0_0">
+      Base production: <b id="baseProd"></b>/s<br><br>
+      <div class="table_center">
+        <div id="number_upgs_table" class="table_center" style="width: 1000px"></div><br><br>
+      </div>
+    </div>
+    <div id="stab_frame0_1">
+      Your best Rebuyable 2 Level is <span id="RUpg2Best">0</span><br><br>
+      <div id="pres_milestones_table"></div>
+    </div>
+    <div id="stab_frame0_2">
+      Base production: <b id="baseProd2"></b>/s<br>
+      Custom Angle: <input type="text" id="custom_angle_input"> (-1: disable)<br><br>
+      Running Angle: <span id="custom_angle_output"></span>
+    </div>
+  </div>
+  <div id="tab_frame1">
+    <div id="stab_frame1_0">
+      To be added
+    </div>
+  </div>
+  <div id="tab_frame2">
+    <button class="btn" onclick="save()">Save</button>
+    <button class="btn" onclick="if (confirm('You wanted to RESET your progress to new game?')) {wipe(); save(); location.reload()}">Hard Reset</button>
+    <button class="btn" onclick="exporty()">Export</button>
+    <button class="btn" onclick="importy()">Import</button>
+    <button class="btn" onclick="player.offline.active=Boolean(1-player.offline.active)">Offline Progress: <text id="offline"></text></button>
+    <button class="btn" onclick="player.pause=Boolean(1-player.pause)">Pause: <text id="pause"></text></button><br><br>
+    <br><br>
+    Complex Number Incremental v0.1 - made by F1e308<br>
+  </div>
+  <div id="tab_frame3">
+    <div id="stab_frame3_0">
+      <button id="presBtn" class="btn half_full" onclick=""></button><br><br>
+    </div>
+  </div>
+</body>
+
+</html>
