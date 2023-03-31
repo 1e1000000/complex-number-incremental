@@ -1,19 +1,5 @@
 const UPGS = {
     number: {
-        temp() {
-            for (let x = 0; x < this.ids.length; x++) {
-                let d = tmp.mainUpgs
-                let data = this.ids[x]
-                d[x].cost = data.cost(player.mainUpgs[x])
-                d[x].costIm = data.costIm
-                d[x].bulk = data.bulk().min(data.maxLvl||1/0)
-                d[x].bonus = this.ids[x].bonus?this.ids[x].bonus():E(0)
-                d[x].can = player.number[d[x].costIm?"Im":"Re"].gte(d[x].cost) && player.mainUpgs[x].lt(UPGS.number.ids[x].maxLvl||1/0)
-
-                d[x].eff = this.ids[x].effect(player.mainUpgs[x]||E(0))
-                d[x].effDesc = this.ids[x].effDesc(d[x].eff)
-            }
-        },
         buy(x, manual=false) {
             let cost = tmp.mainUpgs[x].cost
             let currency = tmp.mainUpgs[x].costIm?"Im":"Re"
@@ -53,7 +39,11 @@ const UPGS = {
                 unl() {return true},
                 desc: `Add 1° to base formula`,
                 costIm: false,
-                maxLvl: E(45),
+                maxLvl(){
+                    let cap = E(40)
+                    cap = cap.add(5)
+                    return cap
+                },
                 cost(x) {
                     if (x.lte(5)) return E(10).pow(x).mul(1000)
                     else if (x.lte(45)) return E(1e5).pow(x.div(5).root(1.2)).mul(1000)
@@ -103,7 +93,7 @@ const UPGS = {
                 effDesc(x) { return format(x,2) + "x"},
             },
             {
-                unl() {return true},
+                unl() {return player.recordRUpg2.gte(1)},
                 desc: `Im multiply Re production`,
                 costIm: true,
                 maxLvl: E(1),
@@ -125,7 +115,7 @@ const UPGS = {
                 effDesc(x) { return format(x) + "x" + (x.gte(1e16)?" (softcapped)":"")},
             },
             {
-                unl() {return true},
+                unl() {return player.recordRUpg2.gte(1)},
                 desc: `Re multiply Re production`,
                 costIm: true,
                 maxLvl: E(1),
@@ -143,7 +133,7 @@ const UPGS = {
                 effDesc(x) { return format(x) + "x"},
             },
             {
-                unl() {return true},
+                unl() {return player.recordRUpg2.gte(1)},
                 desc: `Raise rebuyable 1 effect by 1.5`,
                 costIm: true,
                 maxLvl: E(1),
@@ -159,7 +149,7 @@ const UPGS = {
                 effDesc(x) { return "^" + format(x)},
             },
             {
-                unl() {return true},
+                unl() {return player.recordRUpg2.gte(1)},
                 desc: `For every 10 Rebuyable 1 level, double Re production`,
                 costIm: true,
                 maxLvl: E(1),
@@ -191,7 +181,7 @@ const UPGS = {
                 effDesc(x) { return format(x,0) + "x<br>Next x2 at Level " + format(UPGS.number.ids[7].next(),0) + (UPGS.number.ids[7].boosts().gte(10)?" (scaled)":"")},
             },
             {
-                unl() {return true},
+                unl() {return player.recordRUpg2.gte(1)},
                 desc: `Re multiply Im production`,
                 costIm: true,
                 maxLvl: E(1),
@@ -207,7 +197,7 @@ const UPGS = {
                 effDesc(x) { return format(x) + "x"},
             },
             {
-                unl() {return true},
+                unl() {return player.recordRUpg2.gte(1)},
                 desc: `Rebuyable 2 level multiply Number production`,
                 costIm: true,
                 maxLvl: E(1),
@@ -223,7 +213,7 @@ const UPGS = {
                 effDesc(x) { return format(x) + "x"},
             },
             {
-                unl() {return true},
+                unl() {return player.recordRUpg2.gte(1)},
                 desc: `Raise rebuyable 3 and one-time upgrade 2 effect by 2`,
                 costIm: true,
                 maxLvl: E(1),
@@ -239,7 +229,7 @@ const UPGS = {
                 effDesc(x) { return "^" + format(x)},
             },
             {
-                unl() {return true},
+                unl() {return player.recordRUpg2.gte(1)},
                 desc: `For every 10 Rebuyable 3 level, double Im production, also quadruple Re production`,
                 costIm: true,
                 maxLvl: E(1),
@@ -271,5 +261,57 @@ const UPGS = {
                 effDesc(x) { return format(x,0) + "x<br>Next x2 at Level " + format(UPGS.number.ids[11].next(),0) + (UPGS.number.ids[11].boosts().gte(10)?" (scaled)":"")},
             },
         ]
+    }
+}
+
+function updateUpgsTemp() {
+    for (let x = 0; x < UPGS.number.ids.length; x++) {
+        let d = tmp.mainUpgs
+        let data = UPGS.number.ids[x]
+        d[x].cost = data.cost(player.mainUpgs[x])
+        d[x].costIm = data.costIm
+        d[x].maxLvl = (typeof data.maxLvl == "function" ? data.maxLvl() : data.maxLvl||E(1/0))
+        d[x].bulk = data.bulk().min(d[x].maxLvl)
+        d[x].bonus = UPGS.number.ids[x].bonus?UPGS.number.ids[x].bonus():E(0)
+        d[x].can = player.number[d[x].costIm?"Im":"Re"].gte(d[x].cost) && player.mainUpgs[x].lt(UPGS.number.ids[x].maxLvl||E(1/0))
+
+        d[x].eff = UPGS.number.ids[x].effect(player.mainUpgs[x]||E(0))
+        d[x].effDesc = UPGS.number.ids[x].effDesc(d[x].eff)
+    }
+}
+
+function setupMainUpgsHTML() {
+    let number_upgs_table = new Element("number_upgs_table")
+	let table = ""
+	for (let i = 0; i < UPGS.number.ids.length; i++) {
+        let upg = UPGS.number.ids[i]
+        table += `
+        <button onclick="UPGS.number.buy(${i})" class="btn full" id="main_upg${i}_div" style="font-size: 11px;">
+        <div style="min-height: 80px">
+            ${E(typeof upg.maxLvl == "function" ? upg.maxLvl() : upg.maxLvl||E(1/0)).gt(1)?`[Level <span id="main_upg${i}_lvl"></span>]<br>`:""}
+            ${upg.desc}<br>
+            ${upg.effDesc?`Currently: <span id="main_upg${i}_eff"></span>`:""}
+        </div>
+        <span id="main_upg${i}_cost"></span>
+        </button>
+        `
+	}
+	number_upgs_table.setHTML(table)
+}
+
+function updateMainUpgsHTML() {
+	document.getElementById("baseProd").innerHTML = tmp.baseProductionDisplay
+    for (let x = 0; x < UPGS.number.ids.length; x++) {
+        let upg = UPGS.number.ids[x]
+        let unl = upg.unl?upg.unl():true
+        tmp.el["main_upg"+x+"_div"].setVisible(unl)
+        if (unl) {
+            tmp.el["main_upg"+x+"_div"].setClasses({btn: true, full: true, upg: true, locked: !tmp.mainUpgs[x].can})
+            if (E(typeof upg.maxLvl == "function" ? upg.maxLvl() : upg.maxLvl||E(1/0)).gt(1)) tmp.el["main_upg"+x+"_lvl"].setTxt(format(player.mainUpgs[x],0)+(tmp.mainUpgs[x].maxLvl.lt(Infinity)?" / "+format(tmp.mainUpgs[x].maxLvl,0):""))
+            if (upg.effDesc) {
+                tmp.el["main_upg"+x+"_eff"].setHTML(upg.effDesc(tmp.mainUpgs[x].eff))
+            }
+            tmp.el["main_upg"+x+"_cost"].setTxt(player.mainUpgs[x].lt(upg.maxLvl||1/0)?"Cost: "+format(tmp.mainUpgs[x].cost)+(tmp.mainUpgs[x].costIm?"i":""):"")
+        }
     }
 }

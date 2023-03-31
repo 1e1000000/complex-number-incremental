@@ -1,5 +1,5 @@
 function calc(dt, dt_offline) {
-    if (player.pause) return
+    if (player.pause || tmp.aprilEnabled) return
     player.offline.time = Math.max(player.offline.time-tmp.offlineMult*dt_offline,0)
 
     player.number.Re = player.number.Re.add(tmp.numberProduction.Re.mul(dt)).max(0)

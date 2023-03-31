@@ -61,42 +61,6 @@ function updateOptionsHTML(){
 	document.getElementById("pause").innerHTML = player.pause?"ON":"OFF"
 }
 
-function setupMainUpgsHTML() {
-    let number_upgs_table = new Element("number_upgs_table")
-	let table = ""
-	for (let i = 0; i < UPGS.number.ids.length; i++) {
-        let upg = UPGS.number.ids[i]
-        table += `
-        <button onclick="UPGS.number.buy(${i})" class="btn full" id="main_upg${i}_div" style="font-size: 11px;">
-        <div style="min-height: 80px">
-            ${(upg.maxLvl||1/0) > 1?`[Level <span id="main_upg${i}_lvl"></span>]<br>`:""}
-            ${upg.desc}<br>
-            ${upg.effDesc?`Currently: <span id="main_upg${i}_eff"></span>`:""}
-        </div>
-        <span id="main_upg${i}_cost"></span>
-        </button>
-        `
-	}
-	number_upgs_table.setHTML(table)
-}
-
-function updateMainUpgsHTML() {
-	document.getElementById("baseProd").innerHTML = tmp.baseProductionDisplay
-    for (let x = 0; x < UPGS.number.ids.length; x++) {
-        let upg = UPGS.number.ids[x]
-        let unl = upg.unl?upg.unl():true
-        tmp.el["main_upg"+x+"_div"].setVisible(unl)
-        if (unl) {
-            tmp.el["main_upg"+x+"_div"].setClasses({btn: true, full: true, upg: true, locked: !tmp.mainUpgs[x].can})
-            if ((upg.maxLvl||1/0) > 1) tmp.el["main_upg"+x+"_lvl"].setTxt(format(player.mainUpgs[x],0)+(upg.maxLvl!==undefined?" / "+format(upg.maxLvl,0):""))
-            if (upg.effDesc) {
-                tmp.el["main_upg"+x+"_eff"].setHTML(upg.effDesc(tmp.mainUpgs[x].eff))
-            }
-            tmp.el["main_upg"+x+"_cost"].setTxt(player.mainUpgs[x].lt(upg.maxLvl||1/0)?"Cost: "+format(tmp.mainUpgs[x].cost)+(tmp.mainUpgs[x].costIm?"i":""):"")
-        }
-    }
-}
-
 function updateHTML(){
     updateUpperHTML()
     updateTabsHTML()

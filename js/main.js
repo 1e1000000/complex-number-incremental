@@ -4,36 +4,15 @@ var player
 
 const MAINS = {
     numberDisplay(){
-        let ret = format(player.number.Re)
+        let ret = ""
         let ret2 = ""
         let x
-        let y
         // base resource
-        x = player.number.Im
-        if (x.neq(0)){
-            if (x.lt(0)) ret = ret + format(x,4) + "i"
-            else ret = ret + "+" + format(x,4) + "i"
-        }
-        // prestige resource
-        x = player.prestige.Re
-        y = player.prestige.Im
-        if (x.neq(0)){
-            if (y.neq(0)){ // complex number
-                if (y.lt(0)) ret2 = format(x,0) + format(y,0) + "i"
-                else ret2 = format(x,0) + "+" + format(y,0) + "i"
-                ret += "+(" + ret2 + ")p"
-            } else { // real number
-                if (x.lt(0)) ret = ret + format(x,0) + "p"
-                else ret = ret + "+" + format(x,0) + "p"
-            }
-        } else {
-            if (y.neq(0)){ // pure imaginary number
-                if (y.lt(0)) ret = ret + format(y,0) + "ip"
-                else ret = ret + "+" + format(y,0) + "ip"
-            } else { // zero number
+        ret += complexDisplay(player.number.Re, player.number.Im, 2, 4, true, false)
 
-            }
-        }
+        // prestige resource
+        //if (tmp.pres.mil_reached[0]) ret += "+" + complexDisplay(player.prestige.Re, player.prestige.Im, 0, 0, true, true) + "<text class='red'>p</text>"
+
         return ret
     },
     baseProd(){
@@ -67,6 +46,27 @@ const MAINS = {
     },
 }
 
+function complexDisplay(Re, Im, RePrec=2, ImPrec=4, zeroDisplay=true, bracket=false){
+    let x = ""
+    Re = E(Re)
+    Im = E(Im)
+    if (Re.neq(0)){
+        if (Im.neq(0)){
+            x = format(Re, RePrec) + "+" + format(Im, ImPrec) + "i"
+            if (bracket) x = "(" + x + ")"
+            return x
+        } else {
+            return format(Re, RePrec)
+        }
+    } else {
+        if (Im.neq(0)){
+            return format(Im, ImPrec) + "i"
+        } else {
+            return (zeroDisplay?format(0, RePrec):"")
+        }
+    }
+}
+
 function baseProductionDisplay(){
     let ret = format(tmp.baseNumberProduction.Re,4)
     if (tmp.baseNumberProduction.Im.neq(0)){
@@ -91,4 +91,12 @@ function resetNumber(){
         Re: E(0),
         Im: E(0)
     }
+}
+
+function capitalFirst(str) {
+	if (str=="" || str==" ") return str
+	return str
+		.split(" ")
+		.map(x => x[0].toUpperCase() + x.slice(1))
+		.join(" ");
 }

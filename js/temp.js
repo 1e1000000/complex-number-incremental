@@ -1,6 +1,7 @@
 var tmp = {}
 
 function resetTemp(){
+    let d = new Date()
     keep = [tmp.el, tmp.prevSave]
 
     tmp = {
@@ -11,7 +12,11 @@ function resetTemp(){
         pres: {
             mil_reached: [],
         },
+        
+        april: d.getDate() == 1 && d.getMonth() == 3,
+        aprilEnabled: false,
     }
+
     for (let x = 0; x < UPGS.number.ids.length; x++) tmp.mainUpgs[x] = {}
     for (let x = 0; x < TABS[1].length; x++) tmp.stab.push(0)
 
@@ -30,16 +35,12 @@ function updateMainTemp(){
     tmp.productionDisplay = productionDisplay()
 }
 
-function updateUpgsTemp() {
-    UPGS.number.temp()
-}
-
 function updateTemp(){
     tmp.offlineActive = player.offline.time > 1
     tmp.offlineMult = tmp.offlineActive?player.offline.time+1:1
 
     updatePrestigeTemp()
 
-    updateMainTemp()
     updateUpgsTemp()
+    updateMainTemp()
 }
