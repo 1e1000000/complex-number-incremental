@@ -93,15 +93,24 @@ function load(x){
 }
 
 function exportData() {
-    let str = btoa(JSON.stringify(player))
-
-    let copyText = document.getElementById('copy')
-    copyText.value = str
-    copyText.style.visibility = "visible"
-    copyText.select();
-    document.execCommand("copy");
-    copyText.style.visibility = "hidden"
+    var el = document.createElement("textarea");
+    el.value = btoa(JSON.stringify(player));
+    el.setAttribute("readonly", "");
+    el.style = {
+      position: "absolute",
+      left: "-9999px"
+    };
+    document.body.appendChild(el);
+    copyToClipboard(el);
+    document.body.removeChild(el);
+    alert("Save exported to clipboard");
 }
+
+function copyToClipboard(el) {
+    el = typeof el === "string" ? document.querySelector(el) : el;
+    el.select();
+    document.execCommand("copy");
+  }
 
 function importData() {
     let loadgame = prompt("Paste in your save WARNING: WILL OVERWRITE YOUR CURRENT SAVE")
