@@ -40,8 +40,7 @@ const UPGS = {
                 desc: `Add 1° to base formula`,
                 costIm: false,
                 maxLvl(){
-                    let cap = E(40)
-                    cap = cap.add(5)
+                    let cap = E(45)
                     return cap
                 },
                 cost(x) {

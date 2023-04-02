@@ -64,8 +64,8 @@
   <div id="tab_frame2">
     <button class="btn" onclick="save()">Save</button>
     <button class="btn" onclick="if (confirm('You wanted to RESET your progress to new game?')) {wipe(); save(); location.reload()}">Hard Reset</button>
-    <button class="btn" onclick="exporty()">Export</button>
-    <button class="btn" onclick="importy()">Import</button>
+    <button class="btn" onclick="exportData()">Export</button>
+    <button class="btn" onclick="importData()">Import</button>
     <button class="btn" onclick="player.offline.active=Boolean(1-player.offline.active)">Offline Progress: <text id="offline"></text></button>
     <button class="btn" onclick="player.pause=Boolean(1-player.pause)">Pause: <text id="pause"></text></button><br><br>
     <br><br>
@@ -73,7 +73,7 @@
   </div>
   <div id="tab_frame3">
     <div id="stab_frame3_0">
-      <button id="presBtn" class="btn half_full" onclick="if(tmp.april){alert('Haha April Fooled!');tmp.aprilEnabled=true}"></button><br><br>
+      <button id="presBtn" class="btn half_full" onclick=""></button><br><br>
     </div>
   </div>
 </body>

@@ -11,7 +11,7 @@ const MAINS = {
         ret += complexDisplay(player.number.Re, player.number.Im, 2, 4, true, false)
 
         // prestige resource
-        //if (tmp.pres.mil_reached[0]) ret += "+" + complexDisplay(player.prestige.Re, player.prestige.Im, 0, 0, true, true) + "<text class='red'>p</text>"
+        if (tmp.pres.mil_reached[0]) ret += "+" + complexDisplay(player.prestige.Re, player.prestige.Im, 0, 0, true, true) + "<text class='red'>p</text>"
 
         return ret
     },

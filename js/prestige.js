@@ -39,7 +39,7 @@ function updatePrestigeTemp() {
 function updatePrestigeHTML() {
     if (tmp.tab == 3) {
         if (tmp.stab[3] == 0) {
-           document.getElementById("presBtn").innerHTML = "Prestige for x" + format(10,0) + " Number production"//"Prestige for " + format(tmp.pres.gain,0) + "<text class='red'>p</text>"
+           document.getElementById("presBtn").innerHTML = "Prestige for " + format(tmp.pres.gain,0) + "<text class='red'>p</text>"
         }
     }
 }
